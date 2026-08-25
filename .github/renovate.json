@@ -1,0 +1,20 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "extends": [
+        "config:recommended",
+        ":semanticPrefixFixDepsChoreOthers",
+        ":dependencyDashboard"
+    ],
+    "schedule": ["before 8am on the first day of the month"],
+    "timezone": "UTC",
+    "assignees": ["vmphase"],
+    "github-actions": {
+        "pinDigests": true
+    },
+    "packageRules": [
+        {
+            "matchManagers": ["pep621", "github-actions"],
+            "addLabels": ["area: dependencies"]
+        }
+    ]
+}

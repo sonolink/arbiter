@@ -1,0 +1,63 @@
+name: Bug Report
+description: Report broken or unexpected behavior in Arbiter
+labels: ["bug: unconfirmed"]
+body:
+    - type: textarea
+      id: description
+      attributes:
+          label: What happened?
+          description: Include what you expected to happen instead.
+          placeholder: Verification fails on valid PRs with error `token exchange returned 401`.
+      validations:
+          required: true
+
+    - type: textarea
+      id: workflow
+      attributes:
+          label: Workflow configuration
+          description: Minimal workflow step that reproduces the issue.
+          render: yaml
+          placeholder: |
+              - uses: owner/arbiter@v1
+              ...
+      validations:
+          required: true
+
+    - type: textarea
+      id: logs
+      attributes:
+          label: Relevant logs
+          description: Job output around the failure. Redact tokens and IDs.
+          render: shell
+
+    - type: input
+      id: version
+      attributes:
+          label: Arbiter version
+          description: The ref you pin in your workflow (`uses:`).
+          placeholder: v1.2.3
+      validations:
+          required: true
+
+    - type: dropdown
+      id: runner
+      attributes:
+          label: Runner OS
+          options:
+              - ubuntu-latest
+              - windows-latest
+              - macos-latest
+      validations:
+          required: true
+
+    - type: checkboxes
+      id: checks
+      attributes:
+          label: Checks
+          options:
+              - label: I've checked existing issues for duplicates.
+                required: true
+              - label: This happens on the latest release of Arbiter.
+                required: true
+              - label: Secrets/OAuth credentials were configured as documented.
+                required: true
