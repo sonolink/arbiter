@@ -29,13 +29,9 @@ before opening an issue or pull request. All contributions are held to both.
   [Conventional Commits](https://www.conventionalcommits.org/) format, e.g.
   `fix(action): resolve token exchange error` or
   `feat(oauth): support additional Discord scopes`.
-- Your **pull request title** must also follow Conventional Commits format,
+- Your **pull request title** must also follow [Conventional Commits](https://www.conventionalcommits.org/) format,
   independently of your individual commit messages — this is checked
   automatically and is required for the PR to pass CI.
-- Use `feat:` for new functionality, `fix:` for bug fixes, and other standard
-  types (`docs:`, `refactor:`, `test:`, `chore:`, etc.) where appropriate.
-- Mark breaking changes with a `!` after the type/scope (e.g. `feat!:`) or a
-  `BREAKING CHANGE:` footer, as per the Conventional Commits spec.
 - Keep commits focused; unrelated changes should be split into separate
   commits or pull requests.
 
@@ -50,14 +46,9 @@ before opening an issue or pull request. All contributions are held to both.
 
 ## Usage of AI
 
-AI tools may be used in preparing contributions, but every contributor is
-fully responsible for the work they submit and must be able to explain and
-justify it without relying on an AI tool to do so. Issue descriptions, pull
-request descriptions, and all communication with maintainers must be written
-by the contributor in their own words. See the full
-[AI Contribution Policy](https://github.com/sonolink/arbiter/blob/main/.github/AI_POLICY.md)
-for details, including provisions for non-native English speakers and rules
-around quoting AI-generated output.
+AI tools may be used when preparing contributions, but contributors are fully responsible 
+for the work they submit and must be able to explain and justify it themselves. All use of AI must 
+comply with the [AI Contribution Policy](https://github.com/sonolink/arbiter/blob/main/.github/AI_POLICY.md).
 
 ## Code review
 
