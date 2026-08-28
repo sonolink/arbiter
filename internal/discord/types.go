@@ -1,6 +1,7 @@
 package discord
 
 import (
+	"slices"
 	"time"
 )
 
@@ -17,13 +18,31 @@ func (g *Guild) CreatedAt() (time.Time, error) {
 }
 
 type Member struct {
-	User         User             `json:"user"`
-	Nick         *string          `json:"nick"`
-	RolesIds     []string         `json:"roles"`
-	JoinedAt     *time.Time       `json:"joined_at"`
-	Flags        GuildMemberFlags `json:"flags"`
+	User              User             `json:"user"`
+	Nick              *string          `json:"nick"`
+	RolesIds          []string         `json:"roles"`
+	JoinedAt          *time.Time       `json:"joined_at"`
 	PendingOnboarding bool             `json:"pending"`
 	BoostingSince     *time.Time       `json:"premium_since"`
+	Flags             GuildMemberFlags `json:"flags"`
+}
+
+func (m *Member) HasAnyRoles(ids ...string) bool {
+	for _, id := range ids {
+		if slices.Contains(m.RolesIds, id) {
+			return true
+		}
+	}
+	return false
+}
+
+func (m *Member) HasAllRoles(ids ...string) bool {
+	for _, id := range ids {
+		if !slices.Contains(m.RolesIds, id) {
+			return false
+		}
+	}
+	return true
 }
 
 type User struct {
