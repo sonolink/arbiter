@@ -44,12 +44,10 @@ func ensureDatabase(opts *pg.Options) error {
 		return fmt.Errorf("storage: admin ping: %w", err)
 	}
 
-	var exists bool
-	_, err := admin.QueryOne(
-		pg.Scan(&exists),
-		"SELECT EXISTS(SELECT 1 FROM pg_database WHERE datname = ?)",
-		opts.Database,
-	)
+	exists, err := admin.Model().
+		TableExpr("pg_database").
+		Where("datname = ?", opts.Database).
+		Exists()
 	if err != nil {
 		return fmt.Errorf("storage: checking database: %w", err)
 	}

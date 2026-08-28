@@ -8,7 +8,6 @@ client_id = "your-discord-client-id"
 client_secret = "your-discord-client-secret"
 redirect_uri = "http://localhost:8080/callback"
 
-# PostgreSQL connection. 
 [database]
 # Either set `url` to a full postgres:// DSN, or fill in the individual fields.
 # url = "postgres://user:pass@localhost:5432/arbiter"
