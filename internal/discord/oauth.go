@@ -107,6 +107,10 @@ func (c *Client) requestToken(ctx context.Context, form url.Values) (*Token, err
 		return nil, err
 	}
 
+	if resp.StatusCode == http.StatusTooManyRequests {
+		return nil, parseRateLimitError(resp, body, parseOAuthError(resp.StatusCode, body))
+	}
+
 	if resp.StatusCode < http.StatusOK || resp.StatusCode >= http.StatusMultipleChoices {
 		return nil, parseOAuthError(resp.StatusCode, body)
 	}

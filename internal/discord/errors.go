@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
+	"time"
 )
 
 type OAuthError struct {
@@ -76,5 +78,54 @@ func parseAPIError(status int, body []byte) error {
 		Code:    payload.Code,
 		Message: msg,
 		Body:    string(body),
+	}
+}
+
+type RateLimitError struct {
+	Err        error
+	RetryAfter time.Duration
+	Global     bool
+}
+
+func (e *RateLimitError) Error() string {
+	return fmt.Sprintf(
+		"discord: rate limited, retry after %s (global=%t): %v",
+		e.RetryAfter,
+		e.Global,
+		e.Err,
+	)
+}
+
+func (e *RateLimitError) Unwrap() error {
+	return e.Err
+}
+
+func parseRateLimitError(resp *http.Response, body []byte, base error) error {
+	var payload struct {
+		Message    string  `json:"message"`
+		RetryAfter float64 `json:"retry_after"`
+		Global     bool    `json:"global"`
+	}
+
+	retryAfter := time.Duration(0)
+	global := false
+
+	if err := json.Unmarshal(body, &payload); err == nil && payload.RetryAfter > 0 {
+		retryAfter = time.Duration(payload.RetryAfter * float64(time.Second))
+		global = payload.Global
+	} else if h := resp.Header.Get("Retry-After"); h != "" {
+		if secs, perr := strconv.ParseFloat(h, 64); perr == nil {
+			retryAfter = time.Duration(secs * float64(time.Second))
+		}
+	}
+
+	if resp.Header.Get("X-RateLimit-Global") == "true" {
+		global = true
+	}
+
+	return &RateLimitError{
+		Err:        base,
+		RetryAfter: retryAfter,
+		Global:     global,
 	}
 }

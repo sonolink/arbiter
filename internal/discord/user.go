@@ -62,6 +62,10 @@ func (c *Client) get(ctx context.Context, accessToken, path string) ([]byte, err
 		return nil, err
 	}
 
+	if resp.StatusCode == http.StatusTooManyRequests {
+		return nil, parseRateLimitError(resp, body, parseAPIError(resp.StatusCode, body))
+	}
+
 	if resp.StatusCode < http.StatusOK || resp.StatusCode >= http.StatusMultipleChoices {
 		return nil, parseAPIError(resp.StatusCode, body)
 	}
