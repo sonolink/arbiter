@@ -6,10 +6,34 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strconv"
+	"time"
 )
 
+// Epoch is the discord epoch in milliseconds.
+const Epoch = 1420070400000
+
+func SnowflakeTime(id string) (time.Time, error) {
+	n, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		return time.Time{}, fmt.Errorf("discord: invalid snowflake %q: %w", id, err)
+	}
+	return time.UnixMilli(n>>22/1000 + Epoch), nil
+}
+
 type User struct {
-	ID string `json:"id"`
+	ID         string  `json:"id"`
+	Flags      int     `json:"public_flags"`
+	GlobalName *string `json:"global_name"`
+	Username   string  `json:"username"`
+	MfaEnabled bool    `json:"mfa_enabled"`
+	Locale     string  `json:"locale"`
+	Verified   bool    `json:"verified"`
+	Email      *string `json:"email"`
+}
+
+func (u *User) CreatedAt() (time.Time, error) {
+	return SnowflakeTime(u.ID)
 }
 
 func (c *Client) Me(ctx context.Context, accessToken string) (*User, error) {
