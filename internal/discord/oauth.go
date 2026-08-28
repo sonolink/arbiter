@@ -21,7 +21,7 @@ func (c *Client) AuthorizeURL(state string, scopes ...string) (string, error) {
 	if len(scopes) == 0 {
 		return "", fmt.Errorf("discord: at least one scope is required.")
 	}
-	
+
 	q := url.Values{
 		"client_id":     {c.id},
 		"response_type": {"code"},
