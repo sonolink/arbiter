@@ -26,6 +26,7 @@ go.work.sum
 
 # toml configs
 *.toml
+!*.example.toml
 
 # Editor/IDE
 .idea/
