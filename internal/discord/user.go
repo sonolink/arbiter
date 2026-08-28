@@ -22,14 +22,14 @@ func SnowflakeTime(id string) (time.Time, error) {
 }
 
 type User struct {
-	ID         string  `json:"id"`
-	Flags      int     `json:"public_flags"`
-	GlobalName *string `json:"global_name"`
-	Username   string  `json:"username"`
-	MfaEnabled bool    `json:"mfa_enabled"`
-	Locale     string  `json:"locale"`
-	Verified   bool    `json:"verified"`
-	Email      *string `json:"email"`
+	ID         string    `json:"id"`
+	Flags      UserFlags `json:"public_flags"`
+	GlobalName *string   `json:"global_name"`
+	Username   string    `json:"username"`
+	MfaEnabled bool      `json:"mfa_enabled"`
+	Locale     string    `json:"locale"`
+	Verified   bool      `json:"verified"`
+	Email      *string   `json:"email"`
 }
 
 func (u *User) CreatedAt() (time.Time, error) {
@@ -51,12 +51,13 @@ func (c *Client) Me(ctx context.Context, accessToken string) (*User, error) {
 }
 
 type Member struct {
-	User         User       `json:"user"`
-	Nick         *string    `json:"nick"`
-	RolesIds     []string   `json:"roles"`
-	JoinedAt     *time.Time `json:"joined_at"`
-	Pending      bool       `json:"pending"`
-	PremiumSince *time.Time `json:"premium_since"`
+	User         User             `json:"user"`
+	Nick         *string          `json:"nick"`
+	RolesIds     []string         `json:"roles"`
+	JoinedAt     *time.Time       `json:"joined_at"`
+	Pending      bool             `json:"pending"`
+	PremiumSince *time.Time       `json:"premium_since"`
+	Flags        GuildMemberFlags `json:"flags"`
 }
 
 func (m *Member) CreatedAt() (time.Time, error) {
@@ -82,11 +83,11 @@ func (c *Client) GuildMember(ctx context.Context, accessToken, guildID string) (
 }
 
 type Guild struct {
-	ID          string   `json:"id"`
-	Name        string   `json:"name"`
-	IsOwner     bool     `json:"owner"`
-	Permissions string   `json:"permissions"`
-	Features    []string `json:"features"`
+	ID          string      `json:"id"`
+	Name        string      `json:"name"`
+	IsOwner     bool        `json:"owner"`
+	Permissions Permissions `json:"permissions"`
+	Features    []string    `json:"features"`
 }
 
 func (c *Client) Guilds(ctx context.Context, accessToken string) ([]Guild, error) {
