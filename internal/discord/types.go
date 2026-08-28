@@ -26,10 +26,6 @@ type Member struct {
 	Flags        GuildMemberFlags `json:"flags"`
 }
 
-func (m *Member) CreatedAt() (time.Time, error) {
-	return SnowflakeTime(m.User.ID)
-}
-
 type User struct {
 	ID         string    `json:"id"`
 	Flags      UserFlags `json:"public_flags"`
