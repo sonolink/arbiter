@@ -22,21 +22,6 @@ func SnowflakeTime(id string) (time.Time, error) {
 	return time.UnixMilli(snowflake), nil
 }
 
-type User struct {
-	ID         string    `json:"id"`
-	Flags      UserFlags `json:"public_flags"`
-	GlobalName *string   `json:"global_name"`
-	Username   string    `json:"username"`
-	MfaEnabled bool      `json:"mfa_enabled"`
-	Locale     string    `json:"locale"`
-	Verified   bool      `json:"verified"`
-	Email      *string   `json:"email"`
-}
-
-func (u *User) CreatedAt() (time.Time, error) {
-	return SnowflakeTime(u.ID)
-}
-
 func (c *Client) Me(ctx context.Context, accessToken string) (*User, error) {
 	body, err := c.get(ctx, accessToken, "/users/@me")
 	if err != nil {
@@ -49,20 +34,6 @@ func (c *Client) Me(ctx context.Context, accessToken string) (*User, error) {
 	}
 
 	return &user, nil
-}
-
-type Member struct {
-	User         User             `json:"user"`
-	Nick         *string          `json:"nick"`
-	RolesIds     []string         `json:"roles"`
-	JoinedAt     *time.Time       `json:"joined_at"`
-	Pending      bool             `json:"pending"`
-	PremiumSince *time.Time       `json:"premium_since"`
-	Flags        GuildMemberFlags `json:"flags"`
-}
-
-func (m *Member) CreatedAt() (time.Time, error) {
-	return SnowflakeTime(m.User.ID)
 }
 
 func (c *Client) GuildMember(ctx context.Context, accessToken, guildID string) (*Member, error) {
@@ -81,14 +52,6 @@ func (c *Client) GuildMember(ctx context.Context, accessToken, guildID string) (
 	}
 
 	return &member, nil
-}
-
-type Guild struct {
-	ID          string      `json:"id"`
-	Name        string      `json:"name"`
-	IsOwner     bool        `json:"owner"`
-	Permissions Permissions `json:"permissions"`
-	Features    []string    `json:"features"`
 }
 
 func (c *Client) Guilds(ctx context.Context, accessToken string) ([]Guild, error) {
