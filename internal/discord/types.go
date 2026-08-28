@@ -32,7 +32,6 @@ type User struct {
 	GlobalName *string   `json:"global_name"`
 	Username   string    `json:"username"`
 	MfaEnabled bool      `json:"mfa_enabled"`
-	Locale     string    `json:"locale"`
 	Verified   bool      `json:"verified"`
 	Email      *string   `json:"email"`
 }
