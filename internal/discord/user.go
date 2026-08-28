@@ -81,6 +81,28 @@ func (c *Client) GuildMember(ctx context.Context, accessToken, guildID string) (
 	return &member, nil
 }
 
+type Guild struct {
+	ID          string   `json:"id"`
+	Name        string   `json:"name"`
+	IsOwner     bool     `json:"owner"`
+	Permissions string   `json:"permissions"`
+	Features    []string `json:"features"`
+}
+
+func (c *Client) Guilds(ctx context.Context, accessToken string) ([]Guild, error) {
+	body, err := c.get(ctx, accessToken, "/users/@me/guilds")
+	if err != nil {
+		return nil, err
+	}
+
+	var guilds []Guild
+	if err := json.Unmarshal(body, &guilds); err != nil {
+		return nil, fmt.Errorf("discord: decoding guilds: %w (body: %.200q)", err, body)
+	}
+
+	return guilds, nil
+}
+
 func (c *Client) get(ctx context.Context, accessToken, path string) ([]byte, error) {
 	req, err := c.newRequest(ctx, http.MethodGet, path, nil)
 	if err != nil {
