@@ -17,7 +17,11 @@ type Token struct {
 	Scopes       []string
 }
 
-func (c *Client) AuthorizeURL(state string, scopes ...string) string {
+func (c *Client) AuthorizeURL(state string, scopes ...string) (string, error) {
+	if len(scopes) == 0 {
+		return "", fmt.Errorf("discord: at least one scope is required.")
+	}
+	
 	q := url.Values{
 		"client_id":     {c.id},
 		"response_type": {"code"},
@@ -33,7 +37,7 @@ func (c *Client) AuthorizeURL(state string, scopes ...string) string {
 		Path:     "/oauth2/authorize",
 		RawQuery: q.Encode(),
 	}
-	return u.String()
+	return u.String(), nil
 }
 
 type tokenResponse struct {
