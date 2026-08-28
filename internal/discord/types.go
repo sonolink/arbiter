@@ -71,3 +71,15 @@ const (
 	ConnectionTypeYouTube     ConnectionType = "youtube"
 )
 
+type Connection struct {
+	ID                string         `json:"id"`
+	Name              string         `json:"name"`
+	Type              ConnectionType `json:"type"`
+	IsVerified        bool           `json:"verified"`
+	IsVisibile        bool           `json:"visibility"`
+	IsMetadataVisible bool           `json:"metadata_visibility"`
+}
+
+func (c *Connection) IsGithubConnection() bool {
+	return c.Type == ConnectionTypeGitHub
+}

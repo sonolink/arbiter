@@ -68,6 +68,20 @@ func (c *Client) Guilds(ctx context.Context, accessToken string) ([]Guild, error
 	return guilds, nil
 }
 
+func (c *Client) Connections(ctx context.Context, accessToken string) ([]Connection, error) {
+	body, err := c.get(ctx, accessToken, "/users/@me/connections")
+	if err != nil {
+		return nil, err
+	}
+
+	var connections []Connection
+	if err := json.Unmarshal(body, &connections); err != nil {
+		return nil, fmt.Errorf("discord: decoding connections: %w (body: %.200q)", err, body)
+	}
+
+	return connections, nil
+}
+
 func (c *Client) get(ctx context.Context, accessToken, path string) ([]byte, error) {
 	req, err := c.newRequest(ctx, http.MethodGet, path, nil)
 	if err != nil {
