@@ -44,13 +44,26 @@ func (c *Client) Me(ctx context.Context, accessToken string) (*User, error) {
 
 	var user User
 	if err := json.Unmarshal(body, &user); err != nil {
-		return nil, fmt.Errorf("discord: decoding user: %w (body: %.200q)", err, body)
+		return nil, fmt.Errorf("discord: decoding user (%s): %w (body: %.200q)", user.ID, err, body)
 	}
 
 	return &user, nil
 }
 
-func (c *Client) GuildMember(ctx context.Context, accessToken, guildID string) (json.RawMessage, error) {
+type Member struct {
+	User         User       `json:"user"`
+	Nick         *string    `json:"nick"`
+	RolesIds     []string   `json:"roles"`
+	JoinedAt     *time.Time `json:"joined_at"`
+	Pending      bool       `json:"pending"`
+	PremiumSince *time.Time `json:"premium_since"`
+}
+
+func (m *Member) CreatedAt() (time.Time, error) {
+	return SnowflakeTime(m.User.ID)
+}
+
+func (c *Client) GuildMember(ctx context.Context, accessToken, guildID string) (*Member, error) {
 	body, err := c.get(
 		ctx,
 		accessToken,
@@ -60,11 +73,12 @@ func (c *Client) GuildMember(ctx context.Context, accessToken, guildID string) (
 		return nil, err
 	}
 
-	if !json.Valid(body) {
-		return nil, fmt.Errorf("discord: member response is not valid JSON (body: %.200q)", body)
+	var member Member
+	if err := json.Unmarshal(body, &member); err != nil {
+		return nil, fmt.Errorf("discord: decoding member (%s): %w (body: %.200q)", member.User.ID, err, body)
 	}
 
-	return body, nil
+	return &member, nil
 }
 
 func (c *Client) get(ctx context.Context, accessToken, path string) ([]byte, error) {
