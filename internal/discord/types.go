@@ -21,9 +21,9 @@ type Member struct {
 	Nick         *string          `json:"nick"`
 	RolesIds     []string         `json:"roles"`
 	JoinedAt     *time.Time       `json:"joined_at"`
-	PremiumSince *time.Time       `json:"premium_since"`
 	Flags        GuildMemberFlags `json:"flags"`
 	PendingOnboarding bool             `json:"pending"`
+	BoostingSince     *time.Time       `json:"premium_since"`
 }
 
 type User struct {
