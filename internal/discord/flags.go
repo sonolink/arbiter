@@ -27,10 +27,6 @@ func HasAllFlags[T flagValue](flags T, check ...T) bool {
 	return true
 }
 
-func HasFlag[T flagValue](flags T, check T) bool {
-	return flags&check == check
-}
-
 type UserFlags int
 
 const (
