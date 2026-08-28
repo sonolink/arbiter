@@ -2,6 +2,9 @@ package config
 
 import (
 	"fmt"
+	"net"
+	"net/url"
+	"strconv"
 
 	"github.com/BurntSushi/toml"
 )
@@ -24,7 +27,6 @@ type DiscordConfig struct {
 }
 
 type DBConfig struct {
-	URL      string `toml:"url"`
 	Host     string `toml:"host"`
 	Port     int    `toml:"port"`
 	User     string `toml:"user"`
@@ -84,11 +86,13 @@ func (c *Config) validate() error {
 }
 
 func (db DBConfig) DSN() string {
-	if db.URL != "" {
-		return db.URL
+	u := url.URL{
+		Scheme:   "postgres",
+		User:     url.UserPassword(db.User, db.Password),
+		Host:     net.JoinHostPort(db.Host, strconv.Itoa(db.Port)),
+		Path:     "/" + db.Database,
+		RawQuery: url.Values{"sslmode": {db.SSLMode}}.Encode(),
 	}
-	return fmt.Sprintf(
-		"postgres://%s:%s@%s:%d/%s?sslmode=%s",
-		db.User, db.Password, db.Host, db.Port, db.Database, db.SSLMode,
-	)
+
+	return u.String()
 }
