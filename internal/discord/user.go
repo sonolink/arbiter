@@ -18,7 +18,8 @@ func SnowflakeTime(id string) (time.Time, error) {
 	if err != nil {
 		return time.Time{}, fmt.Errorf("discord: invalid snowflake %q: %w", id, err)
 	}
-	return time.UnixMilli(n>>22/1000 + Epoch), nil
+	var snowflake = ((n >> 22) + Epoch) / 1000
+	return time.UnixMilli(snowflake), nil
 }
 
 type User struct {
