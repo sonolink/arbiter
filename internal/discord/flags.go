@@ -5,6 +5,32 @@ import (
 	"strconv"
 )
 
+type flagValue interface {
+	~int | ~uint64
+}
+
+func HasAnyFlags[T flagValue](flags T, check ...T) bool {
+	for _, c := range check {
+		if flags&c == c {
+			return true
+		}
+	}
+	return false
+}
+
+func HasAllFlags[T flagValue](flags T, check ...T) bool {
+	for _, c := range check {
+		if flags&c != c {
+			return false
+		}
+	}
+	return true
+}
+
+func HasFlag[T flagValue](flags T, check T) bool {
+	return flags&check == check
+}
+
 type UserFlags int
 
 const (
@@ -14,10 +40,6 @@ const (
 	UserFlagVerifiedDeveloper     UserFlags = 1 << 17 // Early Verified Bot Developer
 	UserFlagCertifiedModerator    UserFlags = 1 << 18 // Moderator Programs Alumni
 )
-
-func (f UserFlags) Has(flag UserFlags) bool {
-	return f&flag == flag
-}
 
 type GuildMemberFlags int
 
@@ -32,10 +54,6 @@ const (
 	GuildMemberFlagAutomodQuarantinedUsername GuildMemberFlags = 1 << 7  // Member's username, display name, or nickname is blocked by AutoMod
 	GuildMemberFlagAutomodQuarantinedGuildTag GuildMemberFlags = 1 << 10 // Member's guild tag is blocked by AutoMod
 )
-
-func (f GuildMemberFlags) Has(flag GuildMemberFlags) bool {
-	return f&flag == flag
-}
 
 type Permissions uint64
 
@@ -93,10 +111,6 @@ const (
 	PermissionPinMessages                      Permissions = 1 << 51 // Allows pinning and unpinning messages
 	PermissionBypassSlowmode                   Permissions = 1 << 52 // Allows bypassing slowmode restrictions
 )
-
-func (p Permissions) Has(perm Permissions) bool {
-	return p&perm == perm
-}
 
 func (p *Permissions) UnmarshalJSON(data []byte) error {
 	var s string
