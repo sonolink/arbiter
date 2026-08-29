@@ -2,62 +2,52 @@ package storage
 
 import (
 	"context"
+	"embed"
 	"fmt"
 
-	"github.com/go-pg/pg/v10"
+	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/jackc/pgx/v5/stdlib"
+	"github.com/pressly/goose/v3"
 )
 
+//go:embed migrations/*.sql
+var migrations embed.FS
+
 type Store struct {
-	db *pg.DB
+	pool *pgxpool.Pool
 }
 
-func NewStoreFromDSN(dsn string) (*Store, error) {
-	opts, err := pg.ParseURL(dsn)
+func NewStore(ctx context.Context, dsn string) (*Store, error) {
+	pool, err := pgxpool.New(ctx, dsn)
 	if err != nil {
-		return nil, fmt.Errorf("storage: parse dsn: %w", err)
+		return nil, fmt.Errorf("storage: connect: %w", err)
 	}
 
-	if err := ensureDatabase(opts); err != nil {
-		return nil, err
-	}
-
-	db := pg.Connect(opts)
-	if err := db.Ping(context.Background()); err != nil {
-		_ = db.Close()
+	if err := pool.Ping(ctx); err != nil {
+		pool.Close()
 		return nil, fmt.Errorf("storage: ping: %w", err)
 	}
-	return &Store{db: db}, nil
+
+	return &Store{pool: pool}, nil
 }
 
-func (s *Store) Close() error {
-	return s.db.Close()
-}
+func (s *Store) Migrate(ctx context.Context) error {
+	goose.SetBaseFS(migrations)
 
-func ensureDatabase(opts *pg.Options) error {
-	adminOpts := *opts
-	adminOpts.Database = "postgres"
-
-	admin := pg.Connect(&adminOpts)
-	defer admin.Close()
-
-	if err := admin.Ping(context.Background()); err != nil {
-		return fmt.Errorf("storage: admin ping: %w", err)
+	if err := goose.SetDialect("postgres"); err != nil {
+		return fmt.Errorf("storage: goose dialect: %w", err)
 	}
 
-	exists, err := admin.Model().
-		TableExpr("pg_database").
-		Where("datname = ?", opts.Database).
-		Exists()
-	if err != nil {
-		return fmt.Errorf("storage: checking database: %w", err)
+	db := stdlib.OpenDBFromPool(s.pool)
+	defer db.Close()
+
+	if err := goose.UpContext(ctx, db, "migrations"); err != nil {
+		return fmt.Errorf("storage: migrate: %w", err)
 	}
 
-	if exists {
-		return nil
-	}
-
-	if _, err := admin.Exec("CREATE DATABASE " + opts.Database); err != nil {
-		return fmt.Errorf("storage: creating database: %w", err)
-	}
 	return nil
+}
+
+func (s *Store) Close() {
+	s.pool.Close()
 }
