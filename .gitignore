@@ -24,10 +24,6 @@ go.work.sum
 # env file
 .env
 
-# toml configs
-*.toml
-!*.example.toml
-
 # Editor/IDE
 .idea/
 .vscode/

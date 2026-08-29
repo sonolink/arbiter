@@ -36,12 +36,12 @@ commands:
 func runMigrate() {
 	ctx := context.Background()
 
-	cfg, err := config.Load("")
+	db, err := config.LoadDatabase()
 	if err != nil {
 		log.Fatalf("arbiter: %v", err)
 	}
 
-	store, err := storage.NewStore(ctx, cfg.DB.DSN())
+	store, err := storage.NewStore(ctx, db.URL)
 	if err != nil {
 		log.Fatalf("arbiter: %v", err)
 	}

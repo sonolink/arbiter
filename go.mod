@@ -3,7 +3,7 @@ module github.com/sonolink/arbiter
 go 1.27.0
 
 require (
-	github.com/BurntSushi/toml v1.6.0
+	github.com/caarlos0/env/v11 v11.4.1
 	github.com/jackc/pgx/v5 v5.10.0
 	github.com/pressly/goose/v3 v3.27.3
 )
