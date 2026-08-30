@@ -10,7 +10,7 @@ import (
 
 type Config struct {
 	Discord  Discord
-	Database Database
+	Postgres Postgres
 	Server   Server
 }
 
@@ -29,7 +29,7 @@ type Discord struct {
 	RedirectURI  string `env:"DISCORD_REDIRECT_URI,required"`
 }
 
-type Database struct {
+type Postgres struct {
 	User     string `env:"POSTGRES_USER,required"`
 	Password string `env:"POSTGRES_PASSWORD,required"`
 	Host     string `env:"POSTGRES_HOST,required"`
@@ -38,13 +38,13 @@ type Database struct {
 	SSLMode  string `env:"POSTGRES_SSLMODE" envDefault:"disable"`
 }
 
-func (d Database) DSN() string {
+func (p Postgres) DSN() string {
 	u := url.URL{
 		Scheme:   "postgres",
-		User:     url.UserPassword(d.User, d.Password),
-		Host:     net.JoinHostPort(d.Host, d.Port),
-		Path:     "/" + d.Name,
-		RawQuery: url.Values{"sslmode": {d.SSLMode}}.Encode(),
+		User:     url.UserPassword(p.User, p.Password),
+		Host:     net.JoinHostPort(p.Host, p.Port),
+		Path:     "/" + p.Name,
+		RawQuery: url.Values{"sslmode": {p.SSLMode}}.Encode(),
 	}
 	return u.String()
 }
@@ -53,10 +53,10 @@ type Server struct {
 	Addr string `env:"SERVER_ADDR" envDefault:":8080"`
 }
 
-func LoadDatabase() (Database, error) {
-	var cfg Database
+func LoadPostgres() (Postgres, error) {
+	var cfg Postgres
 	if err := env.Parse(&cfg); err != nil {
-		return Database{}, fmt.Errorf("config: %w", err)
+		return Postgres{}, fmt.Errorf("config: %w", err)
 	}
 
 	return cfg, nil

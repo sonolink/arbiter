@@ -36,12 +36,12 @@ commands:
 func runMigrate() {
 	ctx := context.Background()
 
-	db, err := config.LoadDatabase()
+	pg, err := config.LoadPostgres()
 	if err != nil {
 		log.Fatalf("arbiter: %v", err)
 	}
 
-	store, err := storage.NewStore(ctx, db.DSN())
+	store, err := storage.NewStore(ctx, pg.DSN())
 	if err != nil {
 		log.Fatalf("arbiter: %v", err)
 	}
