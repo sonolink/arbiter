@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"net/url"
 
 	"github.com/caarlos0/env/v11"
 )
@@ -28,7 +29,23 @@ type Discord struct {
 }
 
 type Database struct {
-	URL string `env:"DATABASE_URL,required"`
+	User     string `env:"POSTGRES_USER,required"`
+	Password string `env:"POSTGRES_PASSWORD,required"`
+	Host     string `env:"POSTGRES_HOST,required"`
+	Port     string `env:"POSTGRES_PORT" envDefault:"5432"`
+	Name     string `env:"POSTGRES_DB,required"`
+	SSLMode  string `env:"POSTGRES_SSLMODE" envDefault:"disable"`
+}
+
+func (d Database) DSN() string {
+	u := url.URL{
+		Scheme:   "postgres",
+		User:     url.UserPassword(d.User, d.Password),
+		Host:     fmt.Sprintf("%s:%s", d.Host, d.Port),
+		Path:     "/" + d.Name,
+		RawQuery: "sslmode=" + d.SSLMode,
+	}
+	return u.String()
 }
 
 type Server struct {

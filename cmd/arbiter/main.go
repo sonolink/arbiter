@@ -41,7 +41,7 @@ func runMigrate() {
 		log.Fatalf("arbiter: %v", err)
 	}
 
-	store, err := storage.NewStore(ctx, db.URL)
+	store, err := storage.NewStore(ctx, db.DSN())
 	if err != nil {
 		log.Fatalf("arbiter: %v", err)
 	}
