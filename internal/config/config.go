@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"net"
 	"net/url"
 
 	"github.com/caarlos0/env/v11"
@@ -41,9 +42,9 @@ func (d Database) DSN() string {
 	u := url.URL{
 		Scheme:   "postgres",
 		User:     url.UserPassword(d.User, d.Password),
-		Host:     fmt.Sprintf("%s:%s", d.Host, d.Port),
+		Host:     net.JoinHostPort(d.Host, d.Port),
 		Path:     "/" + d.Name,
-		RawQuery: "sslmode=" + d.SSLMode,
+		RawQuery: url.Values{"sslmode": {d.SSLMode}}.Encode(),
 	}
 	return u.String()
 }
