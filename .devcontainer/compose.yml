@@ -1,19 +1,30 @@
 name: arbiter
 
+x-app: &app
+  build:
+    context: ..
+    dockerfile: .devcontainer/Dockerfile
+  env_file:
+    - ../.env
+  environment:
+    - POSTGRES_HOST=postgres
+    - POSTGRES_PORT=5432
+  volumes:
+    - ../:/workspace:cached
+    - go-mod-cache:/go/pkg/mod
+  working_dir: /workspace
+
 services:
   app:
-    build:
-      context: ..
-      dockerfile: .devcontainer/Dockerfile
-    env_file:
-      - ../.env
-    environment:
-      - POSTGRES_HOST=postgres
-    volumes:
-      - ../:/workspace:cached
-      - go-mod-cache:/go/pkg/mod
-    working_dir: /workspace
+    <<: *app
     command: sleep infinity
+    depends_on:
+      migrator:
+        condition: service_completed_successfully
+
+  migrator:
+    <<: *app
+    command: ["go", "run", "./cmd/arbiter", "migrate"]
     depends_on:
       postgres:
         condition: service_healthy
