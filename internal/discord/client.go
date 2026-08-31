@@ -45,7 +45,8 @@ func (c *Client) newRequest(
 	return req, nil
 }
 
-// readBody reads a response but caps it at maxResponseBytes.
+// readBody reads a response.
+// If the response bytes exceed maxResponseBytes an error is returned.
 func readBody(resp *http.Response) ([]byte, error) {
 	body, err := io.ReadAll(io.LimitReader(resp.Body, maxResponseBytes+1))
 	if err != nil {

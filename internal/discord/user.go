@@ -13,7 +13,7 @@ type User struct {
 	ID string `json:"id"`
 }
 
-// Me returns the profile of the user behind the given access token.
+// Me returns the data of the user behind the given access token.
 func (c *Client) Me(ctx context.Context, accessToken string) (*User, error) {
 	body, err := c.get(ctx, accessToken, "/users/@me")
 	if err != nil {
@@ -28,7 +28,7 @@ func (c *Client) Me(ctx context.Context, accessToken string) (*User, error) {
 	return &user, nil
 }
 
-// GuildMember returns the raw membership record as JSON. It stays raw so callers
+// GuildMember returns the raw member record as JSON. It stays raw so callers
 // can pick the fields they need without this package guessing the schema.
 func (c *Client) GuildMember(ctx context.Context, accessToken, guildID string) (json.RawMessage, error) {
 	body, err := c.get(

@@ -83,8 +83,7 @@ func parseAPIError(status int, body []byte) error {
 	}
 }
 
-// RateLimitError reports a rate limit, with how long to wait before
-// retrying.
+// RateLimitError is an error returned by Discord when a ratelimit is hit on their end.
 type RateLimitError struct {
 	Err        error
 	RetryAfter time.Duration

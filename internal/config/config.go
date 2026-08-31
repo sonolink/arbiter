@@ -85,14 +85,14 @@ func LoadLog() (Log, error) {
 	return cfg, nil
 }
 
-// Discord holds the OAuth credentials for the Discord application.
+// Discord holds application settings used for OAuth.
 type Discord struct {
 	ClientID     string `env:"DISCORD_CLIENT_ID,required"`
 	ClientSecret string `env:"DISCORD_CLIENT_SECRET,required"`
 	RedirectURI  string `env:"DISCORD_REDIRECT_URI,required"`
 }
 
-// Postgres holds the settings used to build a database connection.
+// Postgres holds the configuration to connect to the postgres database.
 type Postgres struct {
 	User     string `env:"POSTGRES_USER,required"`
 	Password string `env:"POSTGRES_PASSWORD,required"`
