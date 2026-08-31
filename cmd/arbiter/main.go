@@ -3,10 +3,12 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
+	"log/slog"
 	"os"
 
 	"github.com/sonolink/arbiter/internal/config"
+	"github.com/sonolink/arbiter/internal/discord"
+	"github.com/sonolink/arbiter/internal/server"
 	"github.com/sonolink/arbiter/internal/storage"
 )
 
@@ -15,9 +17,19 @@ func main() {
 		printUsage()
 	}
 
+	logCfg, err := config.LoadLog()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "arbiter: %v\n", err)
+		os.Exit(1)
+	}
+
+	slog.SetDefault(slog.New(logCfg.Handler(os.Stderr)))
+
 	switch os.Args[1] {
 	case "migrate":
 		runMigrate()
+	case "serve":
+		runServe()
 	default:
 		fmt.Fprintf(os.Stderr, "arbiter: unknown command %q\n\n", os.Args[1])
 		printUsage()
@@ -38,18 +50,51 @@ func runMigrate() {
 
 	pg, err := config.LoadPostgres()
 	if err != nil {
-		log.Fatalf("arbiter: %v", err)
+		slog.Error("loading configuration", "error", err)
+		os.Exit(1)
 	}
 
 	store, err := storage.NewStore(ctx, pg.DSN())
 	if err != nil {
-		log.Fatalf("arbiter: %v", err)
+		slog.Error("connecting to postgres", "error", err)
+		os.Exit(1)
 	}
 	defer store.Close()
 
 	if err := store.Migrate(ctx); err != nil {
-		log.Fatalf("arbiter: %v", err)
+		slog.Error("applying migrations", "error", err)
+		os.Exit(1)
 	}
 
-	log.Println("arbiter: migrations applied")
+	slog.Info("migrations applied")
+}
+
+func runServe() {
+	ctx := context.Background()
+
+	cfg, err := config.Load()
+	if err != nil {
+		slog.Error("loading configuration", "error", err)
+		os.Exit(1)
+	}
+
+	store, err := storage.NewStore(ctx, cfg.Postgres.DSN())
+	if err != nil {
+		slog.Error("connecting to postgres", "error", err)
+		os.Exit(1)
+	}
+	defer store.Close()
+
+	discordClient := discord.NewClient(cfg.Discord)
+
+	srv := server.New(
+		cfg.Server,
+		slog.Default(),
+		store,
+		discordClient,
+	)
+	if err := srv.Run(); err != nil {
+		slog.Error("running the server", "error", err)
+		os.Exit(1)
+	}
 }

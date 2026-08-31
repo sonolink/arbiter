@@ -2,25 +2,78 @@ package config
 
 import (
 	"fmt"
+	"io"
+	"log/slog"
 	"net"
 	"net/url"
+	"strconv"
+	"time"
 
 	"github.com/caarlos0/env/v11"
 )
 
 type Config struct {
+	Log      Log
 	Discord  Discord
 	Postgres Postgres
 	Server   Server
 }
 
-func Load() (*Config, error) {
-	var cfg Config
-	if err := env.Parse(&cfg); err != nil {
-		return nil, fmt.Errorf("config: %w", err)
+func Load() (Config, error) {
+	cfg, err := env.ParseAs[Config]()
+	if err != nil {
+		return Config{}, fmt.Errorf("config: %w", err)
 	}
 
-	return &cfg, nil
+	return cfg, nil
+}
+
+type LogFormat string
+
+const (
+	LogFormatText LogFormat = "text"
+	LogFormatJSON LogFormat = "json"
+)
+
+func (f *LogFormat) UnmarshalText(text []byte) error {
+	switch format := LogFormat(text); format {
+	case LogFormatText, LogFormatJSON:
+		*f = format
+
+		return nil
+	default:
+		return fmt.Errorf(
+			"invalid log format %q, want %q or %q",
+			format,
+			LogFormatText,
+			LogFormatJSON,
+		)
+	}
+}
+
+type Log struct {
+	Format LogFormat  `env:"LOG_FORMAT" envDefault:"text"`
+	Level  slog.Level `env:"LOG_LEVEL"  envDefault:"info"`
+}
+
+func (l Log) Handler(w io.Writer) slog.Handler {
+	opts := &slog.HandlerOptions{Level: l.Level}
+
+	switch l.Format {
+	case LogFormatJSON:
+		return slog.NewJSONHandler(w, opts)
+	default:
+		return slog.NewTextHandler(w, opts)
+	}
+}
+
+func LoadLog() (Log, error) {
+	cfg, err := env.ParseAs[Log]()
+	if err != nil {
+		return Log{}, fmt.Errorf("config: %w", err)
+	}
+
+	return cfg, nil
 }
 
 type Discord struct {
@@ -50,12 +103,21 @@ func (p Postgres) DSN() string {
 }
 
 type Server struct {
-	Addr string `env:"SERVER_ADDR" envDefault:":8080"`
+	Host            string        `env:"SERVER_HOST"             envDefault:"127.0.0.1"`
+	Port            int           `env:"SERVER_PORT"             envDefault:"8080"`
+	ReadTimeout     time.Duration `env:"SERVER_READ_TIMEOUT"     envDefault:"5s"`
+	WriteTimeout    time.Duration `env:"SERVER_WRITE_TIMEOUT"    envDefault:"30s"`
+	IdleTimeout     time.Duration `env:"SERVER_IDLE_TIMEOUT"     envDefault:"120s"`
+	ShutdownTimeout time.Duration `env:"SERVER_SHUTDOWN_TIMEOUT" envDefault:"10s"`
+}
+
+func (s Server) Addr() string {
+	return net.JoinHostPort(s.Host, strconv.Itoa(s.Port))
 }
 
 func LoadPostgres() (Postgres, error) {
-	var cfg Postgres
-	if err := env.Parse(&cfg); err != nil {
+	cfg, err := env.ParseAs[Postgres]()
+	if err != nil {
 		return Postgres{}, fmt.Errorf("config: %w", err)
 	}
 

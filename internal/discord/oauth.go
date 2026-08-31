@@ -23,9 +23,9 @@ func (c *Client) AuthorizeURL(state string, scopes ...string) (string, error) {
 	}
 
 	q := url.Values{
-		"client_id":     {c.id},
+		"client_id":     {c.cfg.ClientID},
 		"response_type": {"code"},
-		"redirect_uri":  {c.redirectURI},
+		"redirect_uri":  {c.cfg.RedirectURI},
 		"scope":         {strings.Join(scopes, " ")},
 		"state":         {state},
 		"prompt":        {"consent"},
@@ -67,7 +67,7 @@ func (c *Client) Exchange(ctx context.Context, code string) (*Token, error) {
 		url.Values{
 			"grant_type":   {"authorization_code"},
 			"code":         {code},
-			"redirect_uri": {c.redirectURI},
+			"redirect_uri": {c.cfg.RedirectURI},
 		},
 	)
 }
@@ -94,7 +94,7 @@ func (c *Client) requestToken(ctx context.Context, form url.Values) (*Token, err
 	}
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	req.SetBasicAuth(c.id, c.secret)
+	req.SetBasicAuth(c.cfg.ClientID, c.cfg.ClientSecret)
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
