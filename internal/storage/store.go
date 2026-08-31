@@ -13,7 +13,7 @@ import (
 //go:embed migrations/*.sql
 var migrations embed.FS
 
-// Store wraps a Postgres connection pool and owns the embedded migrations.
+// Store enables interaction with the postgres database.
 type Store struct {
 	pool *pgxpool.Pool
 }
