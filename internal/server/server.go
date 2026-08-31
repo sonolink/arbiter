@@ -14,8 +14,7 @@ import (
 	"github.com/sonolink/arbiter/internal/storage"
 )
 
-// Server runs the HTTP service with the dependencies it needs to handle
-// requests.
+// Server runs the HTTP service with the dependencies it needs to handle requests.
 type Server struct {
 	cfg           config.Server
 	logger        *slog.Logger
