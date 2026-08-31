@@ -8,6 +8,7 @@
 - [ ] Breaking change (alters existing behaviour/compatibility)
 - [ ] Refactor (internal cleanup, no behaviour change)
 - [ ] CI / dependency update
+- [ ] Documentation update
 
 ## Checklist
 <!-- Put an x inside [ ] to check it, like so: [x] -->

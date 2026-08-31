@@ -6,27 +6,25 @@ import (
 	"io"
 	"net/http"
 	"time"
+
+	"github.com/sonolink/arbiter/internal/config"
 )
 
 const maxResponseBytes = 1 << 20
 
 // Client talks to the Discord API using the given application credentials.
 type Client struct {
-	id          string
-	secret      string
-	redirectURI string
-	baseURL     string
-	httpClient  *http.Client
+	cfg        config.Discord
+	baseURL    string
+	httpClient *http.Client
 }
 
-// NewClient builds a Client from Discord application credentials and an OAuth redirect URI.
-func NewClient(id, secret, redirectURI string) *Client {
+// NewClient builds a Client from a Discord configuration.
+func NewClient(cfg config.Discord) *Client {
 	return &Client{
-		id:          id,
-		secret:      secret,
-		redirectURI: redirectURI,
-		baseURL:     "https://discord.com/api/v10",
-		httpClient:  &http.Client{Timeout: 10 * time.Second},
+		cfg:        cfg,
+		baseURL:    "https://discord.com/api/v10",
+		httpClient: &http.Client{Timeout: 10 * time.Second},
 	}
 }
 

@@ -13,6 +13,7 @@ const TAGS = {
     "Breaking change": "status: breaking change",
     "Refactor": "type: refactor",
     "CI / dependency update": "area: dependencies",
+    "Documentation update": "type: documentation",
 };
 
 const AUTO_LABELS = new Set(Object.values(TAGS));
