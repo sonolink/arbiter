@@ -10,6 +10,7 @@ import (
 
 const maxResponseBytes = 1 << 20
 
+// Client talks to the Discord API using the given application credentials.
 type Client struct {
 	id          string
 	secret      string
@@ -18,6 +19,7 @@ type Client struct {
 	httpClient  *http.Client
 }
 
+// NewClient builds a Client from Discord application credentials and an OAuth redirect URI.
 func NewClient(id, secret, redirectURI string) *Client {
 	return &Client{
 		id:          id,
@@ -39,13 +41,13 @@ func (c *Client) newRequest(
 		return nil, err
 	}
 
-	// version is a place holder, it should actually later come from
-	// somewhere standard.
+	// version is a place holder, it should actually later come from somewhere standard.
 	req.Header.Set("User-Agent", "arbiter/0.1 (https://github.com/sonolink/arbiter)")
 
 	return req, nil
 }
 
+// readBody reads a response but caps it at maxResponseBytes.
 func readBody(resp *http.Response) ([]byte, error) {
 	body, err := io.ReadAll(io.LimitReader(resp.Body, maxResponseBytes+1))
 	if err != nil {

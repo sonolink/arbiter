@@ -10,6 +10,8 @@ import (
 	"time"
 )
 
+// Token holds the result of a Discord OAuth exchange. ExpiresAt is computed locally
+// from the seconds Discord reports.
 type Token struct {
 	AccessToken  string
 	RefreshToken string
@@ -17,6 +19,7 @@ type Token struct {
 	Scopes       []string
 }
 
+// AuthorizeURL builds the Discord consent page URL for the given state and scopes.
 func (c *Client) AuthorizeURL(state string, scopes ...string) (string, error) {
 	if len(scopes) == 0 {
 		return "", fmt.Errorf("discord: at least one scope is required.")
@@ -61,6 +64,7 @@ func (tr tokenResponse) token() (*Token, error) {
 	}, nil
 }
 
+// Exchange swaps an authorization code for a token.
 func (c *Client) Exchange(ctx context.Context, code string) (*Token, error) {
 	return c.requestToken(
 		ctx,
@@ -72,6 +76,7 @@ func (c *Client) Exchange(ctx context.Context, code string) (*Token, error) {
 	)
 }
 
+// Refresh uses a refresh token to get a fresh access token.
 func (c *Client) Refresh(ctx context.Context, refreshToken string) (*Token, error) {
 	return c.requestToken(
 		ctx,

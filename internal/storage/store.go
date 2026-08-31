@@ -13,10 +13,13 @@ import (
 //go:embed migrations/*.sql
 var migrations embed.FS
 
+// Store wraps a Postgres connection pool. The schema lives in embedded SQL files.
 type Store struct {
 	pool *pgxpool.Pool
 }
 
+// NewStore opens a connection pool to the given DSN and makes sure the database
+// is reachable before returning.
 func NewStore(ctx context.Context, dsn string) (*Store, error) {
 	pool, err := pgxpool.New(ctx, dsn)
 	if err != nil {
@@ -31,6 +34,7 @@ func NewStore(ctx context.Context, dsn string) (*Store, error) {
 	return &Store{pool: pool}, nil
 }
 
+// Migrate applies any pending migrations to the database.
 func (s *Store) Migrate(ctx context.Context) error {
 	goose.SetBaseFS(migrations)
 
@@ -48,6 +52,7 @@ func (s *Store) Migrate(ctx context.Context) error {
 	return nil
 }
 
+// Close releases the database connection pool.
 func (s *Store) Close() {
 	s.pool.Close()
 }
