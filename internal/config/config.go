@@ -12,6 +12,7 @@ import (
 	"github.com/caarlos0/env/v11"
 )
 
+// Config holds all runtime settings for the application.
 type Config struct {
 	Log      Log
 	Discord  Discord
@@ -19,6 +20,7 @@ type Config struct {
 	Server   Server
 }
 
+// Load reads the full configuration from environment variables.
 func Load() (Config, error) {
 	cfg, err := env.ParseAs[Config]()
 	if err != nil {
@@ -28,10 +30,13 @@ func Load() (Config, error) {
 	return cfg, nil
 }
 
+// LogFormat is the format used for log output.
 type LogFormat string
 
 const (
+	// LogFormatText writes logs as plain text.
 	LogFormatText LogFormat = "text"
+	// LogFormatJSON writes logs as JSON.
 	LogFormatJSON LogFormat = "json"
 )
 
@@ -51,11 +56,14 @@ func (f *LogFormat) UnmarshalText(text []byte) error {
 	}
 }
 
+// Log holds the settings that control how the app writes logs.
 type Log struct {
 	Format LogFormat  `env:"LOG_FORMAT" envDefault:"text"`
 	Level  slog.Level `env:"LOG_LEVEL"  envDefault:"info"`
 }
 
+// Handler builds a slog handler that writes to w using the configured
+// format and level.
 func (l Log) Handler(w io.Writer) slog.Handler {
 	opts := &slog.HandlerOptions{Level: l.Level}
 
@@ -67,6 +75,7 @@ func (l Log) Handler(w io.Writer) slog.Handler {
 	}
 }
 
+// LoadLog reads only the logging settings from the environment.
 func LoadLog() (Log, error) {
 	cfg, err := env.ParseAs[Log]()
 	if err != nil {
@@ -76,12 +85,14 @@ func LoadLog() (Log, error) {
 	return cfg, nil
 }
 
+// Discord holds application settings used for OAuth.
 type Discord struct {
 	ClientID     string `env:"DISCORD_CLIENT_ID,required"`
 	ClientSecret string `env:"DISCORD_CLIENT_SECRET,required"`
 	RedirectURI  string `env:"DISCORD_REDIRECT_URI,required"`
 }
 
+// Postgres holds the configuration to connect to the postgres database.
 type Postgres struct {
 	User     string `env:"POSTGRES_USER,required"`
 	Password string `env:"POSTGRES_PASSWORD,required"`
@@ -91,6 +102,7 @@ type Postgres struct {
 	SSLMode  string `env:"POSTGRES_SSLMODE" envDefault:"disable"`
 }
 
+// DSN builds a Postgres connection string from the settings.
 func (p Postgres) DSN() string {
 	u := url.URL{
 		Scheme:   "postgres",
@@ -102,6 +114,7 @@ func (p Postgres) DSN() string {
 	return u.String()
 }
 
+// Server holds the HTTP listener settings.
 type Server struct {
 	Host            string        `env:"SERVER_HOST"             envDefault:"127.0.0.1"`
 	Port            int           `env:"SERVER_PORT"             envDefault:"8080"`
@@ -111,10 +124,12 @@ type Server struct {
 	ShutdownTimeout time.Duration `env:"SERVER_SHUTDOWN_TIMEOUT" envDefault:"10s"`
 }
 
+// Addr combines host and port into a listener address.
 func (s Server) Addr() string {
 	return net.JoinHostPort(s.Host, strconv.Itoa(s.Port))
 }
 
+// LoadPostgres reads only the Postgres settings, without the rest of the app config.
 func LoadPostgres() (Postgres, error) {
 	cfg, err := env.ParseAs[Postgres]()
 	if err != nil {

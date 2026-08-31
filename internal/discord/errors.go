@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// OAuthError is an error returned by Discord's OAuth token endpoint.
 type OAuthError struct {
 	Status      int
 	Code        string
@@ -41,6 +42,7 @@ func parseOAuthError(status int, body []byte) error {
 	}
 }
 
+// APIError is an error returned by a Discord REST endpoint.
 type APIError struct {
 	Status  int
 	Code    int
@@ -81,6 +83,7 @@ func parseAPIError(status int, body []byte) error {
 	}
 }
 
+// RateLimitError is an error returned by Discord when a ratelimit is hit on their end.
 type RateLimitError struct {
 	Err        error
 	RetryAfter time.Duration

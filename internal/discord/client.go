@@ -12,12 +12,14 @@ import (
 
 const maxResponseBytes = 1 << 20
 
+// Client talks to the Discord API using the given application credentials.
 type Client struct {
 	cfg        config.Discord
 	baseURL    string
 	httpClient *http.Client
 }
 
+// NewClient builds a Client from a Discord configuration.
 func NewClient(cfg config.Discord) *Client {
 	return &Client{
 		cfg:        cfg,
@@ -37,13 +39,14 @@ func (c *Client) newRequest(
 		return nil, err
 	}
 
-	// version is a place holder, it should actually later come from
-	// somewhere standard.
+	// version is a place holder, it should actually later come from somewhere standard.
 	req.Header.Set("User-Agent", "arbiter/0.1 (https://github.com/sonolink/arbiter)")
 
 	return req, nil
 }
 
+// readBody reads a response.
+// If the response bytes exceed maxResponseBytes an error is returned.
 func readBody(resp *http.Response) ([]byte, error) {
 	body, err := io.ReadAll(io.LimitReader(resp.Body, maxResponseBytes+1))
 	if err != nil {

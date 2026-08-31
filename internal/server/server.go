@@ -14,6 +14,7 @@ import (
 	"github.com/sonolink/arbiter/internal/storage"
 )
 
+// Server runs the HTTP service with the dependencies it needs to handle requests.
 type Server struct {
 	cfg           config.Server
 	logger        *slog.Logger
@@ -21,6 +22,7 @@ type Server struct {
 	discordClient *discord.Client
 }
 
+// New builds a Server from its configuration and dependencies.
 func New(
 	cfg config.Server,
 	logger *slog.Logger,
@@ -39,6 +41,8 @@ func (s *Server) addRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /healthz", s.handleHealth)
 }
 
+// Run starts the HTTP server and blocks until it stops, draining in-flight
+// requests during shutdown.
 func (s *Server) Run() error {
 	mux := http.NewServeMux()
 	s.addRoutes(mux)
