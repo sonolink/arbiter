@@ -56,7 +56,7 @@ func runMigrate() {
 
 	store, err := storage.NewStore(ctx, pg.DSN())
 	if err != nil {
-		slog.Error("connecting to the postgres", "error", err)
+		slog.Error("connecting to postgres", "error", err)
 		os.Exit(1)
 	}
 	defer store.Close()
