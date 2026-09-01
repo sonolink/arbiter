@@ -1,4 +1,4 @@
-name: arbiter
+name: arbiterer
 
 x-app: &app
   build:
@@ -19,7 +19,7 @@ x-app: &app
 services:
   server:
     <<: *app
-    command: ["go", "run", "./cmd/arbiter", "serve"]
+    command: ["go", "run", "./cmd/arbiterer", "serve"]
     ports:
       - "${SERVER_PORT}:8080"
     depends_on:
@@ -28,7 +28,7 @@ services:
 
   migrator:
     <<: *app
-    command: ["go", "run", "./cmd/arbiter", "migrate"]
+    command: ["go", "run", "./cmd/arbiterer", "migrate"]
     depends_on:
       postgres:
         condition: service_healthy

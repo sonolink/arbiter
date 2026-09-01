@@ -9,9 +9,9 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/sonolink/arbiter/internal/config"
-	"github.com/sonolink/arbiter/internal/discord"
-	"github.com/sonolink/arbiter/internal/storage"
+	"github.com/sonolink/arbiterer/internal/config"
+	"github.com/sonolink/arbiterer/internal/discord"
+	"github.com/sonolink/arbiterer/internal/storage"
 )
 
 // Server runs the HTTP service with the dependencies it needs to handle requests.

@@ -1,12 +1,12 @@
 name: Feature Request
-description: Suggest an improvement or new capability for Arbiter
+description: Suggest an improvement or new capability for Arbiterer
 labels: ["idea: new feature"]
 body:
   - type: textarea
     id: problem
     attributes:
       label: Problem or use case
-      description: What are you trying to achieve that Arbiter can't do today?
+      description: What are you trying to achieve that Arbiterer can't do today?
       placeholder: I want to require verification only for first-time contributors.
     validations:
       required: true
@@ -18,7 +18,7 @@ body:
       description: How would it work? Include workflow YAML if input/output related.
       render: yaml
       placeholder: |
-        - uses: owner/arbiter@v1
+        - uses: owner/arbiterer@v1
           with:
             require-first-time-only: true
     validations:
@@ -37,5 +37,5 @@ body:
       options:
         - label: I've checked existing issues and discussions for this request.
           required: true
-        - label: This fits Arbiter's scope.
+        - label: This fits Arbiterer's scope.
           required: true

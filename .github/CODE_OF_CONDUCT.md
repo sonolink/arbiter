@@ -2,7 +2,7 @@
 
 ## Our Pledge
 
-Arbiter is built by and for people. As contributors and maintainers, we are
+Arbiterer is built by and for people. As contributors and maintainers, we are
 committed to ensuring that participation in this project remains a positive
 experience for everyone regardless of race, ethnicity, caste, color, age, 
 physical characteristics, neurodiversity, disability, sex or gender, gender
@@ -40,14 +40,14 @@ is harmful to the project or its community.
 
 ## Scope
 
-This Code of Conduct covers all spaces associated with Arbiter: the
+This Code of Conduct covers all spaces associated with Arbiterer: the
 repository, issue tracker, Discord server, and any other official channel.
 It also applies whenever someone is acting as a representative of the project
 in public, for example: at an event, on social media, or via an official
 project account.
 
 Contributions involving AI tools are additionally subject to the
-[AI Contribution Policy](https://github.com/sonolink/arbiter/blob/main/AI_POLICY.md).
+[AI Contribution Policy](https://github.com/sonolink/arbiterer/blob/main/AI_POLICY.md).
 
 ## Reporting & Enforcement
 

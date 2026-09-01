@@ -1,10 +1,10 @@
-# Contributing to Arbiter
+# Contributing to Arbiterer
 
-Thank you for your interest in improving Arbiter. This document covers how to
+Thank you for your interest in improving Arbiterer. This document covers how to
 set up your environment, the conventions we use, and
 what to expect from the review process. Please also read our
-[Code of Conduct](https://github.com/sonolink/arbiter/blob/main/.github/CODE_OF_CONDUCT.md)
-and [AI Contribution Policy](https://github.com/sonolink/arbiter/blob/main/.github/AI_POLICY.md)
+[Code of Conduct](https://github.com/sonolink/arbiterer/blob/main/.github/CODE_OF_CONDUCT.md)
+and [AI Contribution Policy](https://github.com/sonolink/arbiterer/blob/main/.github/AI_POLICY.md)
 before opening an issue or pull request. All contributions are held to both.
 
 ## Before you start
@@ -48,7 +48,7 @@ before opening an issue or pull request. All contributions are held to both.
 
 AI tools may be used when preparing contributions, but contributors are fully responsible 
 for the work they submit and must be able to explain and justify it themselves. All use of AI must 
-comply with the [AI Contribution Policy](https://github.com/sonolink/arbiter/blob/main/.github/AI_POLICY.md).
+comply with the [AI Contribution Policy](https://github.com/sonolink/arbiterer/blob/main/.github/AI_POLICY.md).
 
 ## Code review
 
@@ -57,14 +57,14 @@ comply with the [AI Contribution Policy](https://github.com/sonolink/arbiter/blo
   discourage the contributor.
 - Maintainers may request changes, ask clarifying questions, or close
   contributions that don't meet the standards described in this document or
-  in the [AI Contribution Policy](https://github.com/sonolink/arbiter/blob/main/.github/AI_POLICY.md).
+  in the [AI Contribution Policy](https://github.com/sonolink/arbiterer/blob/main/.github/AI_POLICY.md).
 - Please engage with feedback in good faith, per our
-  [Code of Conduct](https://github.com/sonolink/arbiter/blob/main/.github/CODE_OF_CONDUCT.md).
+  [Code of Conduct](https://github.com/sonolink/arbiterer/blob/main/.github/CODE_OF_CONDUCT.md).
 
 ## Security issues
 
 Do not report security vulnerabilities through public issues or pull
-requests. See [SECURITY.md](https://github.com/sonolink/arbiter/blob/main/.github/SECURITY.md)
+requests. See [SECURITY.md](https://github.com/sonolink/arbiterer/blob/main/.github/SECURITY.md)
 for how to report them privately.
 
 ## Questions

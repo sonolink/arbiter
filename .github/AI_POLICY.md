@@ -1,6 +1,6 @@
 # AI Contribution Policy
 
-The use of AI tools in preparing contributions to Arbiter is permitted.
+The use of AI tools in preparing contributions to Arbiterer is permitted.
 Regardless of how a contribution is produced, the contributor remains fully
 responsible for it, and all contributions are held to the same standard of
 review.
@@ -47,7 +47,7 @@ remains accountable for the work submitted under their name.
 
 ## Enforcement
 
-Arbiter maintainers reserve the right to close issues or pull requests that
+Arbiterer maintainers reserve the right to close issues or pull requests that
 do not comply with this policy, to hide comments believed to be
 AI-generated without disclosure, and to restrict contributors who repeatedly
 or clearly violate this policy. This policy may be revised as circumstances
