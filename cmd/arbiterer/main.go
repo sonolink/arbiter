@@ -6,10 +6,10 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/sonolink/arbiter/internal/config"
-	"github.com/sonolink/arbiter/internal/discord"
-	"github.com/sonolink/arbiter/internal/server"
-	"github.com/sonolink/arbiter/internal/storage"
+	"github.com/sonolink/arbiterer/internal/config"
+	"github.com/sonolink/arbiterer/internal/discord"
+	"github.com/sonolink/arbiterer/internal/server"
+	"github.com/sonolink/arbiterer/internal/storage"
 )
 
 func main() {
@@ -19,7 +19,7 @@ func main() {
 
 	logCfg, err := config.LoadLog()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "arbiter: %v\n", err)
+		fmt.Fprintf(os.Stderr, "arbiterer: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -31,13 +31,13 @@ func main() {
 	case "serve":
 		runServe()
 	default:
-		fmt.Fprintf(os.Stderr, "arbiter: unknown command %q\n\n", os.Args[1])
+		fmt.Fprintf(os.Stderr, "arbiterer: unknown command %q\n\n", os.Args[1])
 		printUsage()
 	}
 }
 
 func printUsage() {
-	fmt.Fprint(os.Stderr, `usage: arbiter <command>
+	fmt.Fprint(os.Stderr, `usage: arbiterer <command>
 
 commands:
   migrate: apply pending database migrations

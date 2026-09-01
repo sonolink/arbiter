@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/sonolink/arbiter/internal/config"
+	"github.com/sonolink/arbiterer/internal/config"
 )
 
 const maxResponseBytes = 1 << 20
@@ -40,7 +40,7 @@ func (c *Client) newRequest(
 	}
 
 	// version is a place holder, it should actually later come from somewhere standard.
-	req.Header.Set("User-Agent", "arbiter/0.1 (https://github.com/sonolink/arbiter)")
+	req.Header.Set("User-Agent", "arbiterer/0.1 (https://github.com/sonolink/arbiterer)")
 
 	return req, nil
 }

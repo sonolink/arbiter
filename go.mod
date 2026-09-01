@@ -1,4 +1,4 @@
-module github.com/sonolink/arbiter
+module github.com/sonolink/arbiterer
 
 go 1.27.0
 

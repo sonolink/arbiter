@@ -15,4 +15,4 @@
 - [ ] Self-reviewed the changes and removed debug code or unrelated changes
 - [ ] Tests pass, and I have manually tested the GitHub Action where applicable
 - [ ] Documentation or changelog has been updated where necessary
-- [ ] Complies with the [AI Contribution Policy](https://github.com/sonolink/arbiter/blob/main/.github/AI_POLICY.md)
+- [ ] Complies with the [AI Contribution Policy](https://github.com/sonolink/arbiterer/blob/main/.github/AI_POLICY.md)
